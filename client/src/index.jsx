@@ -10,12 +10,34 @@ class App extends React.Component {
     this.state = { 
       repos: []
     }
+    this.getRepos = this.getRepos.bind(this);
+  }
 
+  getRepos () {
+    var context = this;
+    $.ajax({
+      url: '/repos',
+      type: 'GET',
+      success: (data) => {
+        context.setState({
+          repos: data
+        })
+      }
+    });
   }
 
   search (term) {
-    console.log(`${term} was searched`);
-    // TODO
+    var rdata = {term: term};
+    $.ajax({
+      url: '/repos',
+      type: 'POST',
+      data: JSON.stringify(rdata),
+      contentType: 'application/json',
+      success: (data) => {
+        (console.log('message sent', data))
+      }
+    });
+  this.getRepos();
   }
 
   render () {
