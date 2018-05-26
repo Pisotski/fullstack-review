@@ -13,7 +13,7 @@ class App extends React.Component {
     this.getRepos = this.getRepos.bind(this);
   }
 
-  getRepos () {
+  getRepos (obj) {
     var context = this;
     $.ajax({
       url: '/repos',
@@ -34,10 +34,10 @@ class App extends React.Component {
       data: JSON.stringify({term: term}),
       contentType: 'application/json',
       success: (data) => {
-        (console.log('message sent', data))
+        (console.log('message sent'))
       }
     });
-  this.getRepos();
+  this.getRepos({term: term});
   }
 
   render () {

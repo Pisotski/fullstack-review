@@ -1,7 +1,16 @@
 const request = require('request');
 const config = require('../config.js');
 
+
+
 let getReposByUsername = (username, callback) => {
+
+  let transformer = function(array) {
+    array = JSON.parse(array);
+    return array.map(function(repo) {
+      return {'id': repo.id, 'name': repo.name, 'watchers': repo.watchers, 'owner': repo.owner.login}
+    })
+  }
 
   let options = {
     url: `https://api.github.com/users/${username}/repos`,
@@ -10,12 +19,12 @@ let getReposByUsername = (username, callback) => {
       'Authorization': `token ${config.TOKEN}`
     },
   };
+
     request(options, function(err, data) {
     if (err) {
-      callback(err, null); 
+      console.log('github data error');
     } else {
-      console.log('github data received', data)
-      callback(null, data);
+      callback(transformer(data.body));
     }
   })
 }

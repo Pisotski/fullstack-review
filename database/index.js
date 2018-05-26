@@ -19,7 +19,7 @@ let save = (repo, callback) => {
   newRepo.id = repo.id;
   newRepo.name = repo.name;
   newRepo.watchers = repo.watchers;
-  newRepo.owner = repo.owner.login;
+  newRepo.owner = repo.owner;
 // ПРИМЕР НОРМАЛЬНОГО КОЛБЭКА
 
   newRepo.save((err, data) => {

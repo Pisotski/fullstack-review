@@ -10,67 +10,33 @@ app.use(express.static(__dirname + '/../client/dist'));
 app.use(cors());
 app.use(bodyParser.json());
 
-var fakeData = [
-  {
-    "id": 182212,
-    "name": "git-consortium",
-    "watchers": 17,
-    "owner": {
-      "login": "octocat"
-    }
-  },
-  {
-    "id": 20978623,
-    "name": "hello-worId",
-    "watchers": 100500,
-    "owner": {
-      "login": "octocat"
-    }
+var names = {};
+var currOwner = '';
+
+app.post('/repos', function (req, res, next) {
+currOwner = req.body.term;
+  if(!names.hasOwnProperty(req.body.term)) {
+    names[currOwner] = true;
+    helpers.getReposByUsername(currOwner, function(data) {
+    data.forEach((repo) => db.save(repo))
+    })
   }
-];
+  res.status(201).send();
+ });
+var transformer = function(data) {
 
-var transformer = function(array) {
-  return array.map(function(repo) {
-    return {'id': repo.id, 'name': repo.name, 'watchers': repo.watchers, 'owner': repo.owner.login}
-  })
 }
-
-app.post('/repos', function (req, res) {
-  // TODO - your code here!
-  // This route should take the github username provided
-  // and get the repo information from the github API, then
-  // save the repo information in the database
-  /////////////////
-
-  helpers.getReposByUsername(req.body.term, function(err, data) {
-    if(err) {
-      console.log(err)
-    } else {
-      console.log(transformer(JSON.parse(data.body)));
-    }
-  })
-  ///////WORKING CODE
-// console.log(req.body);
-  // db.save(fakeData[0], function(err, data) {
-  //   if (err) {
-  //     console.log('error on sending message to db')
-  //   } else {
-  //   console.log(data);
-  //   res.status(201).send();
-  //   }
-  // })
-  ////////END 
-});
 
 app.get('/repos', function (req, res) {
   // This route should send back the top 25 repos
 
 ///////////////////////РАБОТАЕТ НА МОДЕЛИ!!!!
-  db.Repo.find({owner: fakeData[0].owner.login}, function(err, data) {
+console.log(req.body)
+  db.Repo.find({owner: currOwner}, function(err, data) {
     if (err) {
       console.log(err);
     } else {
-      res.status(200).send(data);
+      res.status(200).send(data.sort((a, b) => b.id - a.id));
     }
   })
 });
