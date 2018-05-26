@@ -17,13 +17,12 @@ class App extends React.Component {
     this.getRepos();
   }
 
-  getRepos (obj) {
+  getRepos () {
     var context = this;
     $.ajax({
       url: '/repos',
       type: 'GET',
       success: (data) => {
-        console.log(data.length);
         context.setState({
           repos: data
         })

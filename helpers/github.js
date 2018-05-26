@@ -20,7 +20,7 @@ let getReposByUsername = (username, callback) => {
     },
   };
 
-    request(options, function(err, data) {
+  request(options, function(err, data) {
     if (err) {
       console.log('github data error');
     } else {

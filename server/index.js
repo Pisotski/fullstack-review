@@ -10,29 +10,32 @@ app.use(express.static(__dirname + '/../client/dist'));
 app.use(cors());
 app.use(bodyParser.json());
 
-var names = {};
 var currOwner = '';
 //time complexity WHERE TO TELL APP NOT TO FETCH
 app.post('/repos', function (req, res, next) {
   currOwner = req.body.term;
-
   if (currOwner.length > 0) {
     db.Repo.find({owner: currOwner}, function(err, data) {
       if (err) {
-        console.log(err);
+        res.status(500).send();
       } else {
         if (data.length <= 0) {
           helpers.getReposByUsername(currOwner, (data) => {
-            data.forEach((repo) => db.save(repo));
+            db.Repo.create(data, function(err, data) {
+              if (err) {
+                console.log(err);
+              } else {
+                res.status(201).send();
+              }
+            })
           });
         }
-        res.status(201).send();
       }
     });
+  } else {
+    res.status(400).send();
   }
  });
-
-
 
 
 app.get('/repos', function (req, res) {

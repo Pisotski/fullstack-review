@@ -5,7 +5,7 @@ const RepoList = (props) => (
   <div>
     <h4> Repo List Component </h4>
     Top {props.repos.length} repos.
-    <div>{props.repos.map((repo, index) => <RepoListEntry key={index} repo={repo}/>)} 
+    <div>{props.repos.map((repo, index) => <RepoListEntry key={index} repo={repo} />)} 
     </div>
   </div>
 )
