@@ -1,27 +1,61 @@
 const express = require('express');
+const db = require('../database/index.js');
+const request = require('request');
 var bodyParser = require('body-parser');
 var cors = require('cors');
-
 let app = express();
 
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(cors());
 app.use(bodyParser.json());
 
-var fakeData = [1];
+var fakeData = [
+  {
+    "id": 182212,
+    "name": "git-consortium",
+    "watchers": 17,
+    "owner": {
+      "login": "octocat"
+    }
+  },
+  {
+    "id": 20978623,
+    "name": "hello-worId",
+    "watchers": 100500,
+    "owner": {
+      "login": "octocat"
+    }
+  }
+];
+
+//HOW TO ADD MODEL IN TERMINAL
 
 app.post('/repos', function (req, res) {
   // TODO - your code here!
   // This route should take the github username provided
   // and get the repo information from the github API, then
   // save the repo information in the database
-  console.log(req.headers, req.body, typeof req.body)
+console.log(req.body);
+  db.save(fakeData[0], function(err, data) {
+    if (err) {
+      console.log('error on sending message to db')
+    }
+    console.log(data);
+    res.status(201).send();
+  })
 });
 
 app.get('/repos', function (req, res) {
-  // TODO - your code here!
   // This route should send back the top 25 repos
-  res.status(200).send(fakeData);
+
+///////////////////////РАБОТАЕТ НА МОДЕЛИ!!!!
+  db.Repo.find({owner: fakeData[0].owner.login}, function(err, data) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.status(200).send(data);
+    }
+  })
 });
 
 let port = 1128;
