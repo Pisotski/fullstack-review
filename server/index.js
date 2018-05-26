@@ -11,7 +11,6 @@ app.use(cors());
 app.use(bodyParser.json());
 
 var currOwner = '';
-//time complexity WHERE TO TELL APP NOT TO FETCH
 app.post('/repos', function (req, res, next) {
   currOwner = req.body.term;
   if (currOwner.length > 0) {
