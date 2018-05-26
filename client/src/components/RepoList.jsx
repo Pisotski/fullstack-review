@@ -4,7 +4,7 @@ import RepoListEntry from './RepoListEntry.jsx'
 const RepoList = (props) => (
   <div>
     <h4> Repo List Component </h4>
-    There are {props.repos.length} repos.
+    Top {props.repos.length} repos.
     <div>{props.repos.map((repo, index) => <RepoListEntry key={index} repo={repo}/>)} 
     </div>
   </div>

@@ -12,17 +12,24 @@ app.use(bodyParser.json());
 
 var names = {};
 var currOwner = '';
-
+//time complexity WHERE TO TELL APP NOT TO FETCH
 app.post('/repos', function (req, res, next) {
   currOwner = req.body.term;
 
-  if(names[currOwner] === undefined) {
-    names[currOwner] = true;
-    helpers.getReposByUsername(currOwner, (data) => {
-    data.forEach((repo) => db.save(repo))
-    })
+  if (currOwner.length > 0) {
+    db.Repo.find({owner: currOwner}, function(err, data) {
+      if (err) {
+        console.log(err);
+      } else {
+        if (data.length <= 0) {
+          helpers.getReposByUsername(currOwner, (data) => {
+            data.forEach((repo) => db.save(repo));
+          });
+        }
+        res.status(201).send();
+      }
+    });
   }
-  res.status(201).send();
  });
 
 
@@ -32,13 +39,13 @@ app.get('/repos', function (req, res) {
   // This route should send back the top 25 repos
 
 ///////////////////////РАБОТАЕТ НА МОДЕЛИ!!!!
-
-  db.Repo.find({owner: currOwner}, function(err, data) {
+  
+  db.Repo.find(null, null, {sort: {'id': 1}, limit: 25}, function(err, data) {
     if (err) {
       console.log(err);
     } else {
-      let sorted = data.sort((a, b) => b.id - a.id);
-      res.status(200).send(sorted);
+      console.log('got data from db');
+      res.status(200).send(data);
     }
   })
 });

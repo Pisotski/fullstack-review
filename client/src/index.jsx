@@ -13,12 +13,17 @@ class App extends React.Component {
     this.getRepos = this.getRepos.bind(this);
   }
 
+  componentDidMount() {
+    this.getRepos();
+  }
+
   getRepos (obj) {
     var context = this;
     $.ajax({
       url: '/repos',
       type: 'GET',
       success: (data) => {
+        console.log(data.length);
         context.setState({
           repos: data
         })
@@ -27,16 +32,17 @@ class App extends React.Component {
   }
 
   search (term) {
+    var context = this;
     $.ajax({
       url: '/repos',
       type: 'POST',
       data: JSON.stringify({term: term}),
       contentType: 'application/json',
       success: (data) => {
+        context.getRepos();
         (console.log('message sent'))
       }
     });
-  this.getRepos();
   }
 
   render () {
