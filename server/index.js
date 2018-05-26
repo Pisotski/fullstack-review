@@ -29,23 +29,36 @@ var fakeData = [
   }
 ];
 
-//HOW TO ADD MODEL IN TERMINAL
+var transformer = function(array) {
+  return array.map(function(repo) {
+    return {'id': repo.id, 'name': repo.name, 'watchers': repo.watchers, 'owner': repo.owner.login}
+  })
+}
 
 app.post('/repos', function (req, res) {
   // TODO - your code here!
   // This route should take the github username provided
   // and get the repo information from the github API, then
   // save the repo information in the database
-  helpers.getReposByUsername(req.body.term)
+  /////////////////
+
+  helpers.getReposByUsername(req.body.term, function(err, data) {
+    if(err) {
+      console.log(err)
+    } else {
+      console.log(transformer(JSON.parse(data.body)));
+    }
+  })
   ///////WORKING CODE
 // console.log(req.body);
-//   db.save(fakeData[0], function(err, data) {
-//     if (err) {
-//       console.log('error on sending message to db')
-//     }
-//     console.log(data);
-//     res.status(201).send();
-//   })
+  // db.save(fakeData[0], function(err, data) {
+  //   if (err) {
+  //     console.log('error on sending message to db')
+  //   } else {
+  //   console.log(data);
+  //   res.status(201).send();
+  //   }
+  // })
   ////////END 
 });
 
