@@ -27,7 +27,6 @@ class App extends React.Component {
   }
 
   search (term) {
-    var rdata = {term: term};
     $.ajax({
       url: '/repos',
       type: 'POST',
@@ -37,7 +36,7 @@ class App extends React.Component {
         (console.log('message sent'))
       }
     });
-  this.getRepos({term: term});
+  this.getRepos();
   }
 
   render () {

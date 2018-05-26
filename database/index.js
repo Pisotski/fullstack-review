@@ -15,7 +15,7 @@ let Repo = mongoose.model('Repo', repoSchema);
 
 let save = (repo, callback) => {
 
-  var newRepo = new Repo;
+  var newRepo = new Repo();
   newRepo.id = repo.id;
   newRepo.name = repo.name;
   newRepo.watchers = repo.watchers;
